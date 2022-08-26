@@ -1,9 +1,9 @@
 package com.myphotos.demo.controller.api;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,27 +13,26 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.myphotos.demo.model.Photo;
+import com.myphotos.demo.service.IPhotoService;
 
 @RestController
-public class AdminPhotoController {
+public class AdminPhotoController{
 
-	private List<Photo> list = new ArrayList<Photo>();
-	private int lastId;
+
+	@Autowired
+	@Qualifier("mainPhotoService")
+	private IPhotoService photoService;
 	
 	public AdminPhotoController() {
-		list.add(new Photo(1,"./img/01.png"));
-		list.add(new Photo(2,"./img/02.png"));
-		list.add(new Photo(3,"./img/03.png"));
-		lastId = 3;
 	}
 	
 	@RequestMapping("/admin/api/photos")
 	public Iterable<Photo> getAll(){
-		return list;
+		return photoService.getAll();
 	}
 	@RequestMapping("/admin/api/photos/{id}")
 	public Photo getById(@PathVariable int id) {
-		Optional<Photo> photo = list.stream().filter(item->item.getId()==id).findFirst();
+		Optional<Photo> photo = photoService.getById(id);
 		if(photo.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "item not found");
 		}
@@ -42,15 +41,12 @@ public class AdminPhotoController {
 	
 	@RequestMapping(value = "/admin/api/photos", method = RequestMethod.POST)
 	public Photo create(@RequestBody Photo photo) {
-		lastId++;
-		photo.setId(lastId);
-		list.add(photo);
-		return photo;
+		return photoService.create(photo);
 	}
 	
 	@RequestMapping(value = "/admin/api/photos/{id}", method = RequestMethod.PUT)
 	public Photo update(@PathVariable int id, @RequestBody Photo photo) {
-		Optional<Photo> foundPhoto = list.stream().filter(item->item.getId()==id).findFirst();
+		Optional<Photo> foundPhoto = photoService.update(id, photo);
 		if(foundPhoto.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "item not found");
 		}
@@ -60,11 +56,10 @@ public class AdminPhotoController {
 	
 	@RequestMapping(value = "/admin/api/photos/{id}", method = RequestMethod.DELETE)
 	public void delete(@PathVariable int id) {
-		Optional<Photo> foundPhoto = list.stream().filter(item->item.getId()==id).findFirst();
-		if(foundPhoto.isEmpty()) {
+		boolean isDeleted = photoService.delete(id);
+		if(!isDeleted) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "item not found");
 		}
-		list.remove(foundPhoto.get());
 	}
 	
 	
