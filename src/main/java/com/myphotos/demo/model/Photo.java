@@ -7,11 +7,12 @@ import javax.persistence.Id;
 
 @Entity
 public class Photo {
-	
+	/**
+	 * The generation type lets the database generate a new value with each insert operation
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
 	private String url;
 	public int getId() {
 		return id;

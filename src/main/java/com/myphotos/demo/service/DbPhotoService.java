@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.myphotos.demo.model.Photo;
 import com.myphotos.demo.repository.IPhotoRepository;
 
+/**
+ * Service indicate that the class is used to hold the business logic
+ */
 @Service("mainPhotoService")
 public class DbPhotoService  implements IPhotoService {
 

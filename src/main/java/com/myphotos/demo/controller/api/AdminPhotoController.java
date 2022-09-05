@@ -15,10 +15,18 @@ import org.springframework.web.server.ResponseStatusException;
 import com.myphotos.demo.model.Photo;
 import com.myphotos.demo.service.IPhotoService;
 
+/**
+ * The RestController is a specialized version of the controller.
+ */
 @RestController
 public class AdminPhotoController{
 
 
+	/**
+	 * Autowired : allows to resolve and injext collaborating beans into our bean
+	 * Bean : objects managed by the spring IoC container
+	 * Qualifier : indicate which bean needs to be injected
+	 */
 	@Autowired
 	@Qualifier("mainPhotoService")
 	private IPhotoService photoService;
@@ -30,6 +38,7 @@ public class AdminPhotoController{
 	public Iterable<Photo> getAll(){
 		return photoService.getAll();
 	}
+	
 	@RequestMapping("/admin/api/photos/{id}")
 	public Photo getById(@PathVariable int id) {
 		Optional<Photo> photo = photoService.getById(id);
