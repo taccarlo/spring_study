@@ -23,7 +23,7 @@ public class AdminPhotoController{
 
 
 	/**
-	 * Autowired : allows to resolve and injext collaborating beans into our bean
+	 * Autowired : allows to resolve and inject collaborating beans into our bean
 	 * Bean : objects managed by the spring IoC container
 	 * Qualifier : indicate which bean needs to be injected
 	 */
